@@ -5,6 +5,9 @@ Procedurally generates landmass, using Unity, and C#
 This was written in C#, using Unity. The project procedurally generates landmass/terrain like mountains, and hills. 
 It uses perlin noise, and the mesh for the terrain is generated according to a texture, generated as per the noise.
 
+It also includes a basic camera controller which lets you navigate, and move around the simulation, and the terrain.
+The noise texture used to generate the terrain is also showed on the top right of the screen.
+
 ### Demo Screenshots
 ![image](https://user-images.githubusercontent.com/97091148/181032734-644ab7ac-1a99-4f31-a620-458d5c3331b6.png)
 ![image](https://user-images.githubusercontent.com/97091148/181033288-e67e5859-2e98-4341-b544-61c68cb0bb88.png)
