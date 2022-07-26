@@ -15,7 +15,11 @@ public class CameraController : MonoBehaviour
         lookVector *= sensitivity;
         lookVector *= Time.deltaTime;
 
-        transform.Rotate(lookVector);
+        transform.eulerAngles = new Vector3(
+            transform.eulerAngles.x + lookVector.x,
+            transform.eulerAngles.y + lookVector.y,
+            0f
+        );
     }
 
     private void HandleMovement() {
