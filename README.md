@@ -6,11 +6,8 @@ This was written in C#, using Unity. The project procedurally generates landmass
 It uses perlin noise, and the mesh for the terrain is generated according to a texture, generated as per the noise.
 
 It also includes a basic camera controller which lets you navigate, and move around the simulation, and the terrain.
-The noise texture used to generate the terrain is also showed on the top right of the screen.
-
-### Demo Screenshots
-![image](https://user-images.githubusercontent.com/97091148/181032734-644ab7ac-1a99-4f31-a620-458d5c3331b6.png)
-![image](https://user-images.githubusercontent.com/97091148/181033288-e67e5859-2e98-4341-b544-61c68cb0bb88.png)
+The terrain also has optional color to it which can be toggled on and off. 
+The noise texture used for the terrain is previewed on the top right of the screen, and the color map used for the terrain is shown on the top left of the screen.
 
 ### Explanation
 The terrain shape is decided using perlin noise, and is made in the `NoiseGenerator` class, in the `NoisGenerator.cs` file.
