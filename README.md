@@ -45,3 +45,6 @@ The file also updates the noise texture on its own, by incrementing the `xOffset
 
 The noise texture is then observed, and depending on the colors and heights specified, a color map will be generated, then a material, and then that material is applied to the terrain mesh.
 If colors are disabled, then a material depending on the noise values will be generated, and that material is applied to the terrain mesh.
+
+### License
+The license for this project can be found in the `LICENSE` file, in the root directory of this repository. The project is licensed under the MIT license.
