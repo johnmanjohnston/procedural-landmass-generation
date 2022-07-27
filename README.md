@@ -26,12 +26,11 @@ Without color:
 The terrain shape is decided using perlin noise, and is made in the `NoiseGenerator` class, in the `NoisGenerator.cs` file.
 It has a Generate() function, which takes in the following arguments:
 ```
-uint width, 
-uint height, 
-float xOffset, 
-float yOffset, 
-float scale,
-
+uint width = 100, 
+uint height = 100, 
+float xOffset = 0f, 
+float yOffset = 0f, 
+float scale = 47f,
 uint octaves = 8
 ```
 
