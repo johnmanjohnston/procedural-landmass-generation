@@ -3,10 +3,10 @@ using UnityEngine;
 namespace TerrainGeneration.MeshGeneration {
     public class MeshGenerator
     {
-        private int xSize;
-        private int ySize;
-        private Texture2D noiseTexture;
-        private float heightMultiplier;
+        private readonly int xSize;
+        private readonly int ySize;
+        private readonly Texture2D noiseTexture;
+        private readonly float heightMultiplier;
 
         private Mesh mesh;
 
@@ -74,8 +74,8 @@ namespace TerrainGeneration.MeshGeneration {
                 return;
             }
 
-            this.xSize = noiseTexture.width;
-            this.ySize = noiseTexture.height;
+            xSize = noiseTexture.width;
+            ySize = noiseTexture.height;
             this.noiseTexture = noiseTexture;
             this.heightMultiplier = heightMultiplier;
         }

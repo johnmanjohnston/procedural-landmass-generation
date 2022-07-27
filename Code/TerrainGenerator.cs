@@ -38,6 +38,7 @@ namespace TerrainGeneration.Generation {
         private Texture2D coloredTexture;
 
         private Renderer terrainRenderer;
+        private MeshFilter terrainMeshFilter;
 
         private void Start() {
             terrainGameObject = GameObject.FindGameObjectWithTag("Mesh");
@@ -46,6 +47,7 @@ namespace TerrainGeneration.Generation {
             coloredTextureUI = GameObject.Find("ColoredTexture");
 
             terrainRenderer = terrainGameObject.GetComponent<Renderer>();
+            terrainMeshFilter = terrainRenderer.GetComponent<MeshFilter>();
             
             StartCoroutine(Init());
         }
@@ -73,15 +75,16 @@ namespace TerrainGeneration.Generation {
 
             texture = NoiseGenerator.NoiseTexture(noise);
 
+            Material material;
+
             if (renderColors) {
                 coloredTexture = NoiseGenerator.ColoredTexture(texture, colors, colorHeights);
-        
-                Material material = NoiseGenerator.TextureToMaterial(coloredTexture);
-                terrainRenderer.material = material;
+                material = NoiseGenerator.MapTextureToMaterial(coloredTexture);
             } else {
-                Material material = NoiseGenerator.TextureToMaterial(texture);
-                terrainRenderer.material = material;
+                material = NoiseGenerator.MapTextureToMaterial(texture);
             }
+
+            terrainRenderer.material = material;
 
             UpdateTexturePreviews();
         }
@@ -110,7 +113,6 @@ namespace TerrainGeneration.Generation {
             coloredImg.preserveAspect = true;
         }
 
-        private Vector3[] vertices;
         private void GenerateMesh() {
             noise = NoiseGenerator.Generate(
                  width,
@@ -125,7 +127,7 @@ namespace TerrainGeneration.Generation {
                 heightMultiplier
             );
 
-            terrainGameObject.GetComponent<MeshFilter>().mesh = meshGenerator.UpdatedMesh();
+            terrainMeshFilter.mesh = meshGenerator.UpdatedMesh();
         }
     }
 }

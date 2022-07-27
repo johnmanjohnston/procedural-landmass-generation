@@ -3,13 +3,12 @@ using UnityEngine;
 namespace TerrainGeneration.Noise {
     public static class NoiseGenerator
     {
-        // Generate noise as float array
         public static float[,] Generate(
-                uint width, 
-                uint height, 
-                float xOffset, 
-                float yOffset, 
-                float scale,
+                uint width = 100, 
+                uint height = 100, 
+                float xOffset = 0f, 
+                float yOffset = 0f, 
+                float scale = 47f,
 
                 uint octaves = 8
             ) {
@@ -72,9 +71,10 @@ namespace TerrainGeneration.Noise {
         }
  
         // Get a Texture2D as a Material
-        public static Material TextureToMaterial(Texture2D texture) {
+        public static Material MapTextureToMaterial(Texture2D texture) {
             Material material = new Material(Shader.Find("Standard"));
             material.mainTexture = texture;
+            material.SetFloat("_Smoothness", 0f);
             return material;
         }
 
