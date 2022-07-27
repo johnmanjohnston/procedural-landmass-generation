@@ -9,6 +9,7 @@ namespace TerrainGeneration.Generation {
     {
         private GameObject terrainGameObject;
         private GameObject noiseTextureUI;
+        private GameObject coloredTextureUI;
 
         [Header("Noise Parameters")]
         [Space]
@@ -23,15 +24,28 @@ namespace TerrainGeneration.Generation {
 
         [SerializeField] private uint octaves;
 
+        [Header("Color Specifications")]
+        [Space]
+        [SerializeField] private Color[] colors;
+        [SerializeField] private float[] colorHeights;
+
+        [Header("Simulation Specifications")]
+        [SerializeField] private bool renderColors;
+
+
         private float[,] noise;
         private Texture2D texture;
+        private Texture2D coloredTexture;
 
-        private MeshFilter mFilter; 
-        private MeshRenderer mRenderer;
+        private Renderer terrainRenderer;
 
         private void Start() {
             terrainGameObject = GameObject.FindGameObjectWithTag("Mesh");
+
             noiseTextureUI = GameObject.Find("NoiseTexture");
+            coloredTextureUI = GameObject.Find("ColoredTexture");
+
+            terrainRenderer = terrainGameObject.GetComponent<Renderer>();
             
             StartCoroutine(Init());
         }
@@ -59,19 +73,41 @@ namespace TerrainGeneration.Generation {
 
             texture = NoiseGenerator.NoiseTexture(noise);
 
-            SetUINoiseTexture();
+            if (renderColors) {
+                coloredTexture = NoiseGenerator.ColoredTexture(texture, colors, colorHeights);
+        
+                Material material = NoiseGenerator.TextureToMaterial(coloredTexture);
+                terrainRenderer.material = material;
+            } else {
+                Material material = NoiseGenerator.TextureToMaterial(texture);
+                terrainRenderer.material = material;
+            }
+
+            UpdateTexturePreviews();
         }
 
-        private void SetUINoiseTexture() {
-            Image image = noiseTextureUI.GetComponent<Image>();
+        private void UpdateTexturePreviews() {
+            // Update the noise texture preview
+            Image noiseImg = noiseTextureUI.GetComponent<Image>();
 
-            image.sprite = Sprite.Create(
+            noiseImg.sprite = Sprite.Create(
                 texture,
                 new Rect(0f, 0f, texture.width, texture.height),
                 new Vector2(0.5f, 0.5f)
             );
 
-            image.preserveAspect = true;
+            noiseImg.preserveAspect = true;
+
+            // then, the colored texture preview
+            Image coloredImg = coloredTextureUI.GetComponent<Image>();
+
+            coloredImg.sprite = Sprite.Create(
+                coloredTexture,
+                new Rect(0f, 0f, coloredTexture.width, coloredTexture.height),
+                new Vector2(0.5f, 0.5f)
+            );
+
+            coloredImg.preserveAspect = true;
         }
 
         private Vector3[] vertices;
@@ -85,25 +121,11 @@ namespace TerrainGeneration.Generation {
             );
 
             MeshGenerator meshGenerator = new MeshGenerator(
-                width,
-                height,
                 texture,
                 heightMultiplier
             );
 
             terrainGameObject.GetComponent<MeshFilter>().mesh = meshGenerator.UpdatedMesh();
         }
-
-        #if UNITY_EDITOR
-        private void OnDrawGizmos() {
-            if (vertices == null) return;
-
-            Gizmos.color = Color.white;
-
-            for (int i = 0; i < vertices.Length; i++) {
-                Gizmos.DrawCube(vertices[i], Vector3.one);
-            }
-        }
-        #endif
     }
 }

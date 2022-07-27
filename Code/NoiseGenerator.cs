@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 
 namespace TerrainGeneration.Noise {
     public static class NoiseGenerator
@@ -72,11 +71,33 @@ namespace TerrainGeneration.Noise {
             return texture;
         }
  
-        // Get noise as Material
-        public static Material NoiseMaterial(Texture2D noiseTexture) {
+        // Get a Texture2D as a Material
+        public static Material TextureToMaterial(Texture2D texture) {
             Material material = new Material(Shader.Find("Standard"));
-            material.mainTexture = noiseTexture;
+            material.mainTexture = texture;
             return material;
+        }
+
+        // Generate Texture2D with color depending on noise value
+        public static Texture2D ColoredTexture(Texture2D orgTexture, Color[] colors, float[] values) {
+            Texture2D texture = new Texture2D(orgTexture.width, orgTexture.height);
+            texture.filterMode = FilterMode.Point;
+
+            for (int x = 0; x < orgTexture.width; x++) {
+                for (int y = 0; y < orgTexture.height; y++) {
+                    float noiseValue = orgTexture.GetPixel(x, y).grayscale;
+
+                    for (int i = 0; i < values.Length; i++) {
+                        if (noiseValue <= values[i]) {
+                            texture.SetPixel(x, y, colors[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            texture.Apply();
+            return texture;
         }
     }
 }

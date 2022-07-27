@@ -3,8 +3,8 @@ using UnityEngine;
 namespace TerrainGeneration.MeshGeneration {
     public class MeshGenerator
     {
-        private uint xSize;
-        private uint ySize;
+        private int xSize;
+        private int ySize;
         private Texture2D noiseTexture;
         private float heightMultiplier;
 
@@ -16,7 +16,7 @@ namespace TerrainGeneration.MeshGeneration {
             for (int z = 0, i = 0; z <= ySize; z++) {
                 for (int x = 0; x <= xSize; x++) {
                     float y = noiseTexture.GetPixel(x, z).grayscale * heightMultiplier;
-                    vertices[i] = new Vector3(x, y * 2f, z); // Multiply with 2 to stregnthen the effect a bit
+                    vertices[i] = new Vector3(x, y, z);
                     i++;
                 }
             }
@@ -43,6 +43,19 @@ namespace TerrainGeneration.MeshGeneration {
             return triangles;
         }
 
+        public Vector2[] GenerateUVs() {
+            Vector2[] uvs = new Vector2[(xSize + 1) * (ySize + 1)];
+
+            for (int z = 0, i = 0; z <= ySize; z++) {
+                for (int x = 0; x <= xSize; x++) {
+                    uvs[i] = new Vector2((float)x / xSize, (float)z / ySize);
+                    i++;
+                }
+            }
+
+            return uvs;
+        }
+
         public Mesh UpdatedMesh() {
             // Null check the mesh
             if (!mesh) mesh = new Mesh();
@@ -50,13 +63,19 @@ namespace TerrainGeneration.MeshGeneration {
             mesh.Clear();
             mesh.vertices = GenerateVertices();
             mesh.triangles = GenerateTriangles();
+            mesh.uv = GenerateUVs();
             mesh.RecalculateNormals();
             return mesh;
         }
 
-        public MeshGenerator(uint xSize, uint ySize, Texture2D noiseTexture, float heightMultiplier) {
-            this.xSize = xSize;
-            this.ySize = ySize;
+        public MeshGenerator(Texture2D noiseTexture, float heightMultiplier) {
+            if (heightMultiplier <= 0) {
+                Debug.LogError("Invalid height multiplier value");
+                return;
+            }
+
+            this.xSize = noiseTexture.width;
+            this.ySize = noiseTexture.height;
             this.noiseTexture = noiseTexture;
             this.heightMultiplier = heightMultiplier;
         }
