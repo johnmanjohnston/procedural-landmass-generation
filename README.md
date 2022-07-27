@@ -47,4 +47,4 @@ The noise texture is then observed, and depending on the colors and heights spec
 If colors are disabled, then a material depending on the noise values will be generated, and that material is applied to the terrain mesh.
 
 ### License
-The license for this project can be found in the `LICENSE` file, in the root directory of this repository. The project is licensed under the MIT license.
+This project is licensed under the MIT License. More information about the license of this project can be found in the `LICENSE` file.
