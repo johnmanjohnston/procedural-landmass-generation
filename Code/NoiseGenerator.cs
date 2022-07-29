@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace TerrainGeneration.Noise {
     public static class NoiseGenerator
@@ -16,18 +17,23 @@ namespace TerrainGeneration.Noise {
             float[,] noise = new float[width, height];
 
             // First, check if the arguments can be used to properly generate the noise
-            if (width == 0 || height == 0) {
-                Debug.LogError("Invalid width/height for noise generation");
+            if (width == 0f) {
+                Debug.LogError("Invalid width argument for noise generation; width must be greater than 0f");
+                return new float[0, 0];
+            }
+
+            if (height == 0f) {
+                Debug.LogError("Invalid height argument for noise generation; height must be greater than 0f");
                 return new float[0, 0];
             }
 
             if (scale == 0f) {
-                Debug.LogError("Invalid scale for noise generation");
+                Debug.LogError("Invalid scale argument for noise generation; scale must be greater than 0f");
                 return new float[0, 0];
             }
 
             if (octaves <= 0) {
-                Debug.LogError("Invalid octave count for noise generation");
+                Debug.LogError("Invalid octave argument for noise generation; octave argument must be greater than 0");
                 return new float[0, 0];
             }
 
@@ -44,7 +50,7 @@ namespace TerrainGeneration.Noise {
                         float yValue = y / scale * (i / 1.25f);
 
                         float noiseValue = Mathf.PerlinNoise(xValue + xOffset, yValue + yOffset);
-                        totalValue += noiseValue / ((i * i) + i); // Creates a desirable noise effect, modify this equation for different results
+                        totalValue += noiseValue / ((float)(Math.Pow(i, 2d)) + i); // Creates a desirable noise effect, modify this equation for different results
                     }
 
                     noise[x, y] = totalValue;
@@ -70,11 +76,11 @@ namespace TerrainGeneration.Noise {
             return texture;
         }
  
-        // Get a Texture2D as a Material
+        // Get a Texture2D as a Material, and remove the smoothness
         public static Material MapTextureToMaterial(Texture2D texture) {
             Material material = new Material(Shader.Find("Standard"));
             material.mainTexture = texture;
-            material.SetFloat("_Smoothness", 0f);
+            material.SetFloat("Smoothness", 0f);
             return material;
         }
 
